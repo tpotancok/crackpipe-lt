@@ -21,7 +21,6 @@
 #pragma once
 
 #include "rust/cxx.h"
-#include "libtorrent-sys/src/lib.rs.h"
 
 #include <libtorrent/version.hpp>
 #include <libtorrent/create_torrent.hpp>
@@ -30,12 +29,10 @@
 
 #include <memory>
 
-char const *version();
-
-namespace ltsys
+namespace libtorrent
 {
-    using Session = lt::session;
+    enum class TorrentStatus : uint8_t;
 
-    std::unique_ptr<Session> create_session_with_alerts();
-    TorrentStatus get_status(Session &ses);
+    std::unique_ptr<lt::session> create_session_with_alerts();
+    TorrentStatus get_status(lt::session &ses);
 }

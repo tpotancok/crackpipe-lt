@@ -19,18 +19,20 @@
 // SOFTWARE.
 
 #include "src/lt.h"
+#include "libtorrent-sys/src/lib.rs.h"
+#include <libtorrent/alert_types.hpp>
 
-namespace ltsys
+namespace libtorrent
 {
-	std::unique_ptr<Session> create_session_with_alerts()
+	std::unique_ptr<lt::session> create_session_with_alerts()
 	{
 		lt::settings_pack p;
 		p.set_int(lt::settings_pack::alert_mask, lt::alert_category::status | lt::alert_category::error);
-		Session ses(p);
-		return std::make_unique<Session>(std::move(ses));
+		lt::session ses(p);
+		return std::make_unique<lt::session>(std::move(ses));
 	}
 
-	TorrentStatus get_status(Session &ses)
+	TorrentStatus get_status(lt::session &ses)
 	{
 		std::vector<lt::alert *> alerts;
 		ses.pop_alerts(&alerts);
@@ -48,4 +50,4 @@ namespace ltsys
 		}
 		return TorrentStatus::Running;
 	}
-} // namespace ltsys
+} // namespace libtorrent

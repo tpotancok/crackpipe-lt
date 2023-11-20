@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#[cxx::bridge(namespace = "ltsys")]
+#[cxx::bridge(namespace = "libtorrent")]
 pub mod ffi {
     enum TorrentStatus {
         Running,
@@ -29,10 +29,11 @@ pub mod ffi {
     unsafe extern "C++" {
         include!("src/lt.h");
 
-        type Session;
+        #[rust_name = "Session"]
+        type session;
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn get_status(ses: &Session) -> TorrentStatus;
+        pub fn get_status(ses: Pin<&mut Session>) -> TorrentStatus;
     }
 }
