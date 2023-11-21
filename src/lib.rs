@@ -55,5 +55,7 @@ pub mod ffi {
             ses: Pin<&mut Session>,
             params: &AddTorrentParams,
         ) -> UniquePtr<TorrentHandle>;
+
+        pub fn resume_torrent(data: &str) -> UniquePtr<AddTorrentParams>;
     }
 }
