@@ -27,8 +27,10 @@
 #include <libtorrent/session.hpp>
 #include <libtorrent/magnet_uri.hpp>
 #include <libtorrent/read_resume_data.hpp>
+#include <libtorrent/write_resume_data.hpp>
 
 #include <memory>
+#include <fstream>
 
 namespace libtorrent
 {
@@ -36,7 +38,7 @@ namespace libtorrent
     struct StatusAlert;
 
     std::unique_ptr<lt::session> create_session_with_alerts();
-    rust::Vec<StatusAlert> handle_alerts(lt::session &ses);
+    rust::Vec<StatusAlert> handle_alerts(lt::session &ses, uint16_t &open_torrents, rust::Str save_data_path);
     bool handle_eq(const lt::torrent_handle &lhs, const lt::torrent_handle &rhs);
     std::unique_ptr<lt::add_torrent_params> parse_magnet_link(rust::Str link, rust::Str save_path);
     std::unique_ptr<lt::torrent_handle> add_torrent(lt::session &ses, const lt::add_torrent_params &params);

@@ -45,7 +45,11 @@ pub mod ffi {
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn handle_alerts(ses: Pin<&mut Session>) -> Vec<StatusAlert>;
+        pub fn handle_alerts<'a>(
+            ses: Pin<&'a mut Session>,
+            open_torrents: Pin<&mut u16>,
+            save_data_path: &str,
+        ) -> Vec<StatusAlert<'a>>;
 
         pub fn handle_eq(lhs: &TorrentHandle, rhs: &TorrentHandle) -> bool;
 

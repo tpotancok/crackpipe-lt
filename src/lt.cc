@@ -32,7 +32,7 @@ namespace libtorrent
 		return std::make_unique<lt::session>(std::move(ses));
 	}
 
-	rust::Vec<StatusAlert> handle_alerts(lt::session &ses)
+	rust::Vec<StatusAlert> handle_alerts(lt::session &ses, uint16_t &open_torrents, rust::Str save_data_path)
 	{
 		std::vector<lt::alert *> alerts;
 		rust::Vec<StatusAlert> results;
@@ -53,6 +53,20 @@ namespace libtorrent
 					TorrentStatus::Error,
 					lt::alert_cast<lt::torrent_error_alert>(a)->handle};
 				results.push_back(entry);
+			}
+			if (lt::alert_cast<lt::save_resume_data_alert>(a))
+			{
+				const lt::save_resume_data_alert *alert = lt::alert_cast<lt::save_resume_data_alert>(a);
+				lt::torrent_handle handle = alert->handle;
+				lt::add_torrent_params params = alert->params;
+				std::vector<char> buf = lt::write_resume_data_buf(params);
+				std::string name = handle.status(lt::torrent_handle::query_name).name;
+				std::string savePath = std::string(save_data_path);
+
+				std::ofstream file(savePath.append(name), std::ios::out | std::ios::binary);
+				std::copy(buf.cbegin(), buf.cend(), std::ostream_iterator<char>(file));
+
+				open_torrents--;
 			}
 		}
 		return results;
