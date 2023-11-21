@@ -42,6 +42,6 @@ pub mod ffi {
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn get_status_updates(ses: Pin<&mut Session>) -> UniquePtr<CxxVector<GetStatusResult>>;
+        pub fn get_status_updates(ses: Pin<&mut Session>) -> Vec<GetStatusResult>;
     }
 }

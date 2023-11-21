@@ -35,5 +35,5 @@ namespace libtorrent
     struct GetStatusResult;
 
     std::unique_ptr<lt::session> create_session_with_alerts();
-    std::unique_ptr<std::vector<GetStatusResult>> get_status_updates(lt::session &ses);
+    rust::Vec<GetStatusResult> get_status_updates(lt::session &ses);
 }
