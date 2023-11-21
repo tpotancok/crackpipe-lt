@@ -26,14 +26,22 @@ pub mod ffi {
         Error,
     }
 
+    struct GetStatusResult<'a> {
+        status: TorrentStatus,
+        torrent: &'a TorrentHandle,
+    }
+
     unsafe extern "C++" {
         include!("src/lt.h");
 
         #[rust_name = "Session"]
         type session;
 
+        #[rust_name = "TorrentHandle"]
+        type torrent_handle;
+
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn get_status(ses: Pin<&mut Session>) -> TorrentStatus;
+        pub fn get_status_updates(ses: Pin<&mut Session>) -> UniquePtr<CxxVector<GetStatusResult>>;
     }
 }

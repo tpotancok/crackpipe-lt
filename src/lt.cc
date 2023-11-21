@@ -32,22 +32,29 @@ namespace libtorrent
 		return std::make_unique<lt::session>(std::move(ses));
 	}
 
-	TorrentStatus get_status(lt::session &ses)
+	std::unique_ptr<std::vector<GetStatusResult>> get_status_updates(lt::session &ses)
 	{
 		std::vector<lt::alert *> alerts;
+		std::vector<GetStatusResult> results;
 		ses.pop_alerts(&alerts);
 
 		for (lt::alert const *a : alerts)
 		{
 			if (lt::alert_cast<lt::torrent_finished_alert>(a))
 			{
-				return TorrentStatus::Finished;
+				GetStatusResult entry = {
+					TorrentStatus::Finished,
+					lt::alert_cast<lt::torrent_finished_alert>(a)->handle};
+				results.push_back(entry);
 			}
 			if (lt::alert_cast<lt::torrent_error_alert>(a))
 			{
-				return TorrentStatus::Error;
+				GetStatusResult entry = {
+					TorrentStatus::Error,
+					lt::alert_cast<lt::torrent_error_alert>(a)->handle};
+				results.push_back(entry);
 			}
 		}
-		return TorrentStatus::Running;
+		return std::make_unique<std::vector<GetStatusResult>>(std::move(results));
 	}
 } // namespace libtorrent

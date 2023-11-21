@@ -32,7 +32,8 @@
 namespace libtorrent
 {
     enum class TorrentStatus : uint8_t;
+    struct GetStatusResult;
 
     std::unique_ptr<lt::session> create_session_with_alerts();
-    TorrentStatus get_status(lt::session &ses);
+    std::unique_ptr<std::vector<GetStatusResult>> get_status_updates(lt::session &ses);
 }
