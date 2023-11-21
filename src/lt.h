@@ -36,4 +36,5 @@ namespace libtorrent
 
     std::unique_ptr<lt::session> create_session_with_alerts();
     rust::Vec<GetStatusResult> get_status_updates(lt::session &ses);
+    bool handle_eq(const lt::torrent_handle &lhs, const lt::torrent_handle &rhs);
 }

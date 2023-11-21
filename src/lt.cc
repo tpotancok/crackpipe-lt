@@ -57,4 +57,9 @@ namespace libtorrent
 		}
 		return results;
 	}
+
+	bool handle_eq(const lt::torrent_handle &lhs, const lt::torrent_handle &rhs)
+	{
+		return lhs == rhs;
+	}
 } // namespace libtorrent
