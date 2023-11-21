@@ -62,4 +62,10 @@ namespace libtorrent
 	{
 		return lhs == rhs;
 	}
+
+	std::unique_ptr<lt::add_torrent_params> parse_magnet_link(rust::Str link)
+	{
+		lt::add_torrent_params atp = lt::parse_magnet_uri(std::string(link));
+		return std::make_unique<lt::add_torrent_params>(std::move(atp));
+	}
 } // namespace libtorrent

@@ -48,5 +48,7 @@ pub mod ffi {
         pub fn get_status_updates(ses: Pin<&mut Session>) -> Vec<GetStatusResult>;
 
         pub fn handle_eq(lhs: &TorrentHandle, rhs: &TorrentHandle) -> bool;
+
+        pub fn parse_magnet_link(link: &str) -> UniquePtr<AddTorrentParams>;
     }
 }
