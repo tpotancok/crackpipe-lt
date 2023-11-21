@@ -38,4 +38,5 @@ namespace libtorrent
     rust::Vec<GetStatusResult> get_status_updates(lt::session &ses);
     bool handle_eq(const lt::torrent_handle &lhs, const lt::torrent_handle &rhs);
     std::unique_ptr<lt::add_torrent_params> parse_magnet_link(rust::Str link, rust::Str save_path);
+    std::unique_ptr<lt::torrent_handle> add_torrent(lt::session &ses, const lt::add_torrent_params &params);
 }

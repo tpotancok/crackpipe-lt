@@ -50,5 +50,10 @@ pub mod ffi {
         pub fn handle_eq(lhs: &TorrentHandle, rhs: &TorrentHandle) -> bool;
 
         pub fn parse_magnet_link(link: &str, save_path: &str) -> UniquePtr<AddTorrentParams>;
+
+        pub fn add_torrent(
+            ses: Pin<&mut Session>,
+            params: &AddTorrentParams,
+        ) -> UniquePtr<TorrentHandle>;
     }
 }

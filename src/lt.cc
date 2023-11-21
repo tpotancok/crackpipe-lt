@@ -69,4 +69,9 @@ namespace libtorrent
 		atp.save_path = std::string(save_path);
 		return std::make_unique<lt::add_torrent_params>(std::move(atp));
 	}
+
+	std::unique_ptr<lt::torrent_handle> add_torrent(lt::session &ses, const lt::add_torrent_params &params)
+	{
+		return std::make_unique<lt::torrent_handle>(std::move(ses.add_torrent(params)));
+	}
 } // namespace libtorrent
