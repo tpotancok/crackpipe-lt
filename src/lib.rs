@@ -61,5 +61,7 @@ pub mod ffi {
         ) -> UniquePtr<TorrentHandle>;
 
         pub fn resume_torrent(data: &str) -> UniquePtr<AddTorrentParams>;
+
+        pub fn save_torrent(handle: &TorrentHandle);
     }
 }

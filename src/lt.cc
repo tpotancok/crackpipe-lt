@@ -93,4 +93,9 @@ namespace libtorrent
 	{
 		return std::make_unique<lt::add_torrent_params>(std::move(lt::read_resume_data(std::string(data))));
 	}
+
+	void save_torrent(const lt::torrent_handle &handle)
+	{
+		handle.save_resume_data();
+	}
 } // namespace libtorrent

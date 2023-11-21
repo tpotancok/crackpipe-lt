@@ -43,4 +43,5 @@ namespace libtorrent
     std::unique_ptr<lt::add_torrent_params> parse_magnet_link(rust::Str link, rust::Str save_path);
     std::unique_ptr<lt::torrent_handle> add_torrent(lt::session &ses, const lt::add_torrent_params &params);
     std::unique_ptr<lt::add_torrent_params> resume_torrent(rust::Str data);
+    void save_torrent(const lt::torrent_handle &handle);
 }
