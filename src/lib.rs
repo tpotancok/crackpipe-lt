@@ -26,7 +26,7 @@ pub mod ffi {
         Error,
     }
 
-    pub struct GetStatusResult<'a> {
+    pub struct StatusAlert<'a> {
         status: TorrentStatus,
         torrent: &'a TorrentHandle,
     }
@@ -45,7 +45,7 @@ pub mod ffi {
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn get_status_updates(ses: Pin<&mut Session>) -> Vec<GetStatusResult>;
+        pub fn handle_alerts(ses: Pin<&mut Session>) -> Vec<StatusAlert>;
 
         pub fn handle_eq(lhs: &TorrentHandle, rhs: &TorrentHandle) -> bool;
 

@@ -32,24 +32,24 @@ namespace libtorrent
 		return std::make_unique<lt::session>(std::move(ses));
 	}
 
-	rust::Vec<GetStatusResult> get_status_updates(lt::session &ses)
+	rust::Vec<StatusAlert> handle_alerts(lt::session &ses)
 	{
 		std::vector<lt::alert *> alerts;
-		rust::Vec<GetStatusResult> results;
+		rust::Vec<StatusAlert> results;
 		ses.pop_alerts(&alerts);
 
 		for (lt::alert const *a : alerts)
 		{
 			if (lt::alert_cast<lt::torrent_finished_alert>(a))
 			{
-				GetStatusResult entry = {
+				StatusAlert entry = {
 					TorrentStatus::Finished,
 					lt::alert_cast<lt::torrent_finished_alert>(a)->handle};
 				results.push_back(entry);
 			}
 			if (lt::alert_cast<lt::torrent_error_alert>(a))
 			{
-				GetStatusResult entry = {
+				StatusAlert entry = {
 					TorrentStatus::Error,
 					lt::alert_cast<lt::torrent_error_alert>(a)->handle};
 				results.push_back(entry);
