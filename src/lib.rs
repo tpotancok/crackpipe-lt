@@ -47,7 +47,7 @@ pub mod ffi {
 
         pub fn handle_alerts<'a>(
             ses: Pin<&'a mut Session>,
-            open_torrents: Pin<&mut u16>,
+            open_torrents: &mut u16,
             save_data_path: &str,
         ) -> Vec<StatusAlert<'a>>;
 
