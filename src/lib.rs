@@ -20,14 +20,14 @@
 
 #[cxx::bridge(namespace = "libtorrent")]
 pub mod ffi {
-    pub enum TorrentStatus {
+    pub enum DownloadStatus {
         Running,
         Finished,
         Error,
     }
 
     pub struct StatusAlert<'a> {
-        status: TorrentStatus,
+        status: DownloadStatus,
         torrent: &'a TorrentHandle,
     }
 
@@ -42,6 +42,9 @@ pub mod ffi {
 
         #[rust_name = "AddTorrentParams"]
         type add_torrent_params;
+
+        #[rust_name = "TorrentStatus"]
+        type torrent_status;
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
@@ -63,5 +66,9 @@ pub mod ffi {
         pub fn resume_torrent(data: &str) -> UniquePtr<AddTorrentParams>;
 
         pub fn save_torrent(handle: &TorrentHandle);
+
+        pub fn get_torrent_status(handle: &TorrentHandle) -> UniquePtr<TorrentStatus>;
+
+        pub fn status_get_progress(status: &TorrentStatus) -> f32;
     }
 }

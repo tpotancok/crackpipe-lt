@@ -43,14 +43,14 @@ namespace libtorrent
 			if (lt::alert_cast<lt::torrent_finished_alert>(a))
 			{
 				StatusAlert entry = {
-					TorrentStatus::Finished,
+					DownloadStatus::Finished,
 					lt::alert_cast<lt::torrent_finished_alert>(a)->handle};
 				results.push_back(entry);
 			}
 			if (lt::alert_cast<lt::torrent_error_alert>(a))
 			{
 				StatusAlert entry = {
-					TorrentStatus::Error,
+					DownloadStatus::Error,
 					lt::alert_cast<lt::torrent_error_alert>(a)->handle};
 				results.push_back(entry);
 			}
@@ -97,5 +97,15 @@ namespace libtorrent
 	void save_torrent(const lt::torrent_handle &handle)
 	{
 		handle.save_resume_data();
+	}
+
+	std::unique_ptr<lt::torrent_status> get_torrent_status(const lt::torrent_handle &torrent)
+	{
+		return std::make_unique<lt::torrent_status>(std::move(torrent.status(status_flags_t(0))));
+	}
+
+	float status_get_progress(const lt::torrent_status &status)
+	{
+		return status.progress;
 	}
 } // namespace libtorrent
