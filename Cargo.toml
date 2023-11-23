@@ -1,9 +1,9 @@
 [package]
-name = "libtorrent-sys"
+name = "crackpipe-lt"
 description = "cxx bindings to libtorrent"
-version = "1.0.0"
+version = "0.1.0"
 authors = ["Nicolas Chevalier <nicolas.chevalier@enicom.org>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 keywords = ["torrent", "magnet"]
 links = "torrent-rasterbar"

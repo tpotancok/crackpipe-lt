@@ -19,7 +19,7 @@
 // SOFTWARE.
 
 #include "src/lt.h"
-#include "libtorrent-sys/src/lib.rs.h"
+#include "crackpipe-lt/src/lib.rs.h"
 #include <libtorrent/alert_types.hpp>
 
 namespace libtorrent
