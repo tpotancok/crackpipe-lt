@@ -2,7 +2,8 @@ use std::{thread::sleep, time::Duration};
 
 use libtorrent_sys::ffi::{self, TorrentStatus};
 
-const MAGNET_LINK: &'static str = "magnet:?xt=urn:btih:78efb442414c713dbab287487855af9b68b7b282&xt=urn:btmh:12208cf2021f0caee2a3dcb336fe5e95227b1e38f74cc5698c4f702f99dfaf1f3c17&dn=calories.ts";
+// public domain CD
+const MAGNET_LINK: &'static str = "magnet:?xt=urn:btih:a88fda5954e89178c372716a6a78b8180ed4dad3&dn=The+WIRED+CD+-+Rip.+Sample.+Mash.+Share&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fwired-cd.torrent";
 
 pub fn main() {
     let mut session = ffi::create_session_with_alerts();
