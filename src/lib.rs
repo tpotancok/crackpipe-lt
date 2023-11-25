@@ -67,6 +67,8 @@ pub mod ffi {
 
         pub fn save_torrent(handle: &TorrentHandle);
 
+        pub fn force_recheck(handle: &TorrentHandle);
+
         pub fn get_torrent_status(handle: &TorrentHandle) -> UniquePtr<TorrentStatus>;
 
         pub fn status_get_progress(status: &TorrentStatus) -> f32;

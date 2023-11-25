@@ -24,6 +24,7 @@ pub fn main() {
         for alert in alerts {
             if alert.status == DownloadStatus::Finished {
                 println!("Torrent finished");
+                ffi::force_recheck(alert.torrent);
                 break 'outer;
             } else if alert.status == DownloadStatus::Error {
                 println!("Torrent failed");
