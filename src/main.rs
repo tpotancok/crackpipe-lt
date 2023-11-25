@@ -14,7 +14,7 @@ pub fn main() {
     let mut session = lt::Session::new();
 
     let torrent = session.add_torrent(MAGNET_LINK, "./output/");
-    let torrent2 = session.add_torrent(MAGNET_LINK_2, "./output/2");
+    let torrent2 = session.add_torrent(MAGNET_LINK_2, "./output/");
 
     let mut open_torrents = 2u16;
 
