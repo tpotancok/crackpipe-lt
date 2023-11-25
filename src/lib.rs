@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+use std::pin::Pin;
+
 #[cxx::bridge(namespace = "libtorrent")]
 pub mod ffi {
     pub enum DownloadStatus {
@@ -78,3 +80,70 @@ pub mod ffi {
 /// libtorrent uses mutexes internally to guarantee thread safety
 unsafe impl Send for ffi::Session {}
 unsafe impl Sync for ffi::Session {}
+
+pub use ffi::DownloadStatus;
+
+pub struct TorrentStatus {
+    status: cxx::UniquePtr<ffi::TorrentStatus>,
+}
+
+impl TorrentStatus {
+    pub(crate) fn new(ptr: cxx::UniquePtr<ffi::TorrentStatus>) -> Self {
+        TorrentStatus { status: ptr }
+    }
+
+    pub fn get_progress(&self) -> f32 {
+        ffi::status_get_progress(&self.status)
+    }
+}
+
+pub struct Torrent {
+    torrent: cxx::UniquePtr<ffi::TorrentHandle>,
+}
+
+impl Torrent {
+    pub(crate) fn new(session: Pin<&mut ffi::Session>, params: &ffi::AddTorrentParams) -> Self {
+        Torrent {
+            torrent: ffi::add_torrent(session, params),
+        }
+    }
+
+    pub fn save_progress(&self) {
+        ffi::save_torrent(&self.torrent)
+    }
+
+    pub fn force_recheck(&self) {
+        ffi::force_recheck(&self.torrent)
+    }
+
+    pub fn get_status(&self) -> TorrentStatus {
+        TorrentStatus::new(ffi::get_torrent_status(&self.torrent))
+    }
+}
+
+pub struct Session {
+    session: cxx::UniquePtr<ffi::Session>,
+}
+
+impl Session {
+    pub fn new() -> Self {
+        Session {
+            session: ffi::create_session_with_alerts(),
+        }
+    }
+
+    pub fn handle_alerts(
+        &mut self,
+        open_torrents: &mut u16,
+        save_data_path: &str,
+    ) -> Vec<ffi::StatusAlert> {
+        ffi::handle_alerts(self.session.pin_mut(), open_torrents, save_data_path)
+    }
+
+    pub fn add_torrent(&mut self, magnet_link: &str, save_path: &str) -> Torrent {
+        Torrent::new(
+            self.session.pin_mut(),
+            &ffi::parse_magnet_link(magnet_link, save_path),
+        )
+    }
+}
