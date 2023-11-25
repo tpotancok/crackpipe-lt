@@ -72,3 +72,7 @@ pub mod ffi {
         pub fn status_get_progress(status: &TorrentStatus) -> f32;
     }
 }
+
+/// libtorrent uses mutexes internally to guarantee thread safety
+unsafe impl Send for ffi::Session {}
+unsafe impl Sync for ffi::Session {}
