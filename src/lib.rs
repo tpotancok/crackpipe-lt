@@ -28,9 +28,9 @@ pub mod ffi {
         Error,
     }
 
-    pub struct StatusAlert<'a> {
+    pub struct StatusAlert {
         status: DownloadStatus,
-        torrent: &'a TorrentHandle,
+        torrent: UniquePtr<TorrentHandle>,
     }
 
     unsafe extern "C++" {
@@ -50,11 +50,11 @@ pub mod ffi {
 
         pub fn create_session_with_alerts() -> UniquePtr<Session>;
 
-        pub fn handle_alerts<'a>(
-            ses: Pin<&'a mut Session>,
+        pub fn handle_alerts(
+            ses: Pin<&mut Session>,
             open_torrents: &mut u16,
             save_data_path: &str,
-        ) -> Vec<StatusAlert<'a>>;
+        ) -> Vec<StatusAlert>;
 
         pub fn handle_eq(lhs: &TorrentHandle, rhs: &TorrentHandle) -> bool;
 
@@ -121,6 +121,12 @@ impl Torrent {
     }
 }
 
+impl From<cxx::UniquePtr<ffi::TorrentHandle>> for Torrent {
+    fn from(value: cxx::UniquePtr<ffi::TorrentHandle>) -> Self {
+        Self { torrent: value }
+    }
+}
+
 pub struct Session {
     session: cxx::UniquePtr<ffi::Session>,
 }
@@ -136,8 +142,11 @@ impl Session {
         &mut self,
         open_torrents: &mut u16,
         save_data_path: &str,
-    ) -> Vec<ffi::StatusAlert> {
+    ) -> Vec<StatusAlert> {
         ffi::handle_alerts(self.session.pin_mut(), open_torrents, save_data_path)
+            .into_iter()
+            .map(|v| v.into())
+            .collect()
     }
 
     pub fn add_torrent(&mut self, magnet_link: &str, save_path: &str) -> Torrent {
@@ -145,5 +154,19 @@ impl Session {
             self.session.pin_mut(),
             &ffi::parse_magnet_link(magnet_link, save_path),
         )
+    }
+}
+
+pub struct StatusAlert {
+    pub status: DownloadStatus,
+    pub torrent: Torrent,
+}
+
+impl From<ffi::StatusAlert> for StatusAlert {
+    fn from(value: ffi::StatusAlert) -> Self {
+        Self {
+            status: value.status,
+            torrent: value.torrent.into(),
+        }
     }
 }

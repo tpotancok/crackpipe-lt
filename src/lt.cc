@@ -44,15 +44,15 @@ namespace libtorrent
 			{
 				StatusAlert entry = {
 					DownloadStatus::Finished,
-					lt::alert_cast<lt::torrent_finished_alert>(a)->handle};
-				results.push_back(entry);
+					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_finished_alert>(a)->handle))};
+				results.push_back(std::move(entry));
 			}
 			if (lt::alert_cast<lt::torrent_error_alert>(a))
 			{
 				StatusAlert entry = {
 					DownloadStatus::Error,
-					lt::alert_cast<lt::torrent_error_alert>(a)->handle};
-				results.push_back(entry);
+					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_error_alert>(a)->handle))};
+				results.push_back(std::move(entry));
 			}
 			if (lt::alert_cast<lt::save_resume_data_alert>(a))
 			{
