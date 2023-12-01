@@ -131,6 +131,12 @@ impl From<cxx::UniquePtr<ffi::TorrentHandle>> for Torrent {
     }
 }
 
+impl PartialEq for Torrent {
+    fn eq(&self, other: &Self) -> bool {
+        ffi::handle_eq(&self.torrent, &other.torrent)
+    }
+}
+
 pub struct Session {
     session: cxx::UniquePtr<ffi::Session>,
 }
@@ -165,6 +171,26 @@ pub struct StatusAlert {
     pub status: DownloadStatus,
     pub torrent: Torrent,
     pub resume_data_saved: bool,
+}
+
+impl StatusAlert {
+    pub fn apply(self, other: &StatusAlert) -> Result<StatusAlert, ()> {
+        if self.torrent != other.torrent {
+            return Err(());
+        }
+        let result = Self {
+            status: {
+                if self.status == DownloadStatus::Running {
+                    other.status
+                } else {
+                    self.status
+                }
+            },
+            torrent: self.torrent,
+            resume_data_saved: self.resume_data_saved || other.resume_data_saved,
+        };
+        Ok(result)
+    }
 }
 
 impl From<ffi::StatusAlert> for StatusAlert {
