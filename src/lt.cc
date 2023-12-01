@@ -44,14 +44,14 @@ namespace libtorrent
 			{
 				StatusAlert entry = {
 					DownloadStatus::Finished,
-					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_finished_alert>(a)->handle))};
+					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_finished_alert>(a)->handle)), false};
 				results.push_back(std::move(entry));
 			}
 			if (lt::alert_cast<lt::torrent_error_alert>(a))
 			{
 				StatusAlert entry = {
 					DownloadStatus::Error,
-					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_error_alert>(a)->handle))};
+					std::make_unique<lt::torrent_handle>(std::move(lt::alert_cast<lt::torrent_error_alert>(a)->handle)), false};
 				results.push_back(std::move(entry));
 			}
 			if (lt::alert_cast<lt::save_resume_data_alert>(a))
@@ -65,6 +65,11 @@ namespace libtorrent
 
 				std::ofstream file(savePath.append(name), std::ios::out | std::ios::binary);
 				std::copy(buf.cbegin(), buf.cend(), std::ostream_iterator<char>(file));
+
+				StatusAlert entry = {
+					DownloadStatus::Finished,
+					std::make_unique<lt::torrent_handle>(std::move(handle)), true};
+				results.push_back(std::move(entry));
 
 				open_torrents--;
 			}

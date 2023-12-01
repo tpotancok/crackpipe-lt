@@ -31,6 +31,7 @@ pub mod ffi {
     pub struct StatusAlert {
         status: DownloadStatus,
         torrent: UniquePtr<TorrentHandle>,
+        pub resume_data_saved: bool,
     }
 
     unsafe extern "C++" {
@@ -163,6 +164,7 @@ impl Session {
 pub struct StatusAlert {
     pub status: DownloadStatus,
     pub torrent: Torrent,
+    pub resume_data_saved: bool,
 }
 
 impl From<ffi::StatusAlert> for StatusAlert {
@@ -170,6 +172,7 @@ impl From<ffi::StatusAlert> for StatusAlert {
         Self {
             status: value.status,
             torrent: value.torrent.into(),
+            resume_data_saved: value.resume_data_saved,
         }
     }
 }
