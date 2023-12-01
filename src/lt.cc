@@ -32,7 +32,7 @@ namespace libtorrent
 		return std::make_unique<lt::session>(std::move(ses));
 	}
 
-	rust::Vec<StatusAlert> handle_alerts(lt::session &ses, uint16_t &open_torrents, rust::Str save_data_path)
+	rust::Vec<StatusAlert> handle_alerts(lt::session &ses, rust::Str save_data_path)
 	{
 		std::vector<lt::alert *> alerts;
 		rust::Vec<StatusAlert> results;
@@ -70,8 +70,6 @@ namespace libtorrent
 					DownloadStatus::Finished,
 					std::make_unique<lt::torrent_handle>(std::move(handle)), true};
 				results.push_back(std::move(entry));
-
-				open_torrents--;
 			}
 		}
 		return results;

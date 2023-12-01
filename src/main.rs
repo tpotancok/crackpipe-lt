@@ -13,35 +13,43 @@ pub fn main() {
 
     let mut session = lt::Session::new();
 
-    let torrent = session.add_torrent(MAGNET_LINK, "./output/");
+    let torrent1 = session.add_torrent(MAGNET_LINK, "./output/");
     let torrent2 = session.add_torrent(MAGNET_LINK_2, "./output/");
 
-    let mut open_torrents = 2u16;
+    let mut torrent1_finished = false;
+    let mut torrent2_finished = false;
 
     'outer: loop {
-        let alerts = session.handle_alerts(&mut open_torrents, "./output/resume/");
+        let alerts = session.handle_alerts("./output/resume/");
         for alert in alerts {
             if alert.status == DownloadStatus::Finished {
                 println!("Torrent finished");
             } else if alert.status == DownloadStatus::Error {
                 println!("Torrent failed");
             }
+            if alert.resume_data_saved {
+                if alert.torrent == torrent1 {
+                    torrent1_finished = true;
+                } else if alert.torrent == torrent2 {
+                    torrent2_finished = true;
+                }
+            }
         }
 
-        let progress = torrent.get_status().get_progress();
+        let progress = torrent1.get_status().get_progress();
         let progress2 = torrent2.get_status().get_progress();
 
         println!("Torrent 1 progress: {}%", progress * 100.);
         println!("Torrent 2 progress: {}%", progress2 * 100.);
 
         if progress == 1. {
-            torrent.save_progress();
+            torrent1.save_progress();
         }
         if progress2 == 1. {
             torrent2.save_progress();
         }
 
-        if open_torrents == 0 {
+        if torrent1_finished && torrent2_finished {
             break 'outer;
         }
 
@@ -49,13 +57,13 @@ pub fn main() {
     }
     println!("All torrents finished, checking...");
 
-    torrent.force_recheck();
+    torrent1.force_recheck();
     torrent2.force_recheck();
 
     loop {
-        let _ = session.handle_alerts(&mut open_torrents, "./output/resume/");
+        let _ = session.handle_alerts("./output/resume/");
 
-        let progress = torrent.get_status().get_progress();
+        let progress = torrent1.get_status().get_progress();
         let progress2 = torrent2.get_status().get_progress();
 
         println!("Torrent 1 check progress: {}%", progress * 100.);
