@@ -81,6 +81,9 @@ pub mod ffi {
 unsafe impl Send for ffi::Session {}
 unsafe impl Sync for ffi::Session {}
 
+unsafe impl Send for ffi::TorrentHandle {}
+unsafe impl Sync for ffi::TorrentHandle {}
+
 pub use ffi::DownloadStatus;
 
 pub struct TorrentStatus {
