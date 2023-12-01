@@ -11,7 +11,7 @@ const MAGNET_LINK_2: &'static str = "magnet:?xt=urn:btih:dd8255ecdc7ca55fb0bbf81
 pub fn main() {
     let _ = fs::remove_dir_all("./output/");
 
-    let mut session = lt::Session::new();
+    let mut session = lt::Session::new("./output/resume/");
 
     let torrent1 = session.add_torrent(MAGNET_LINK, "./output/");
     let torrent2 = session.add_torrent(MAGNET_LINK_2, "./output/");
@@ -20,7 +20,7 @@ pub fn main() {
     let mut torrent2_finished = false;
 
     'outer: loop {
-        let alerts = session.handle_alerts("./output/resume/");
+        let alerts = session.handle_alerts();
         for alert in alerts {
             if alert.status == DownloadStatus::Finished {
                 println!("Torrent finished");
@@ -61,7 +61,7 @@ pub fn main() {
     torrent2.force_recheck();
 
     loop {
-        let _ = session.handle_alerts("./output/resume/");
+        let _ = session.handle_alerts();
 
         let progress = torrent1.get_status().get_progress();
         let progress2 = torrent2.get_status().get_progress();

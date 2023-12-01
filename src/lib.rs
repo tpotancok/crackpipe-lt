@@ -133,19 +133,21 @@ impl PartialEq for Torrent {
     }
 }
 
-pub struct Session {
+pub struct Session<'a> {
     session: cxx::UniquePtr<ffi::Session>,
+    save_data_path: &'a str,
 }
 
-impl Session {
-    pub fn new() -> Self {
+impl Session<'_> {
+    pub fn new<'a>(save_data_path: &'a str) -> Session<'a> {
         Session {
             session: ffi::create_session_with_alerts(),
+            save_data_path,
         }
     }
 
-    pub fn handle_alerts(&mut self, save_data_path: &str) -> Vec<StatusAlert> {
-        ffi::handle_alerts(self.session.pin_mut(), save_data_path)
+    pub fn handle_alerts(&mut self) -> Vec<StatusAlert> {
+        ffi::handle_alerts(self.session.pin_mut(), self.save_data_path)
             .into_iter()
             .map(|v| v.into())
             .collect()
