@@ -166,6 +166,18 @@ pub struct StatusAlert {
 }
 
 impl StatusAlert {
+    pub fn new(
+        torrent: Torrent,
+        download_status: DownloadStatus,
+        resume_data_saved: bool,
+    ) -> StatusAlert {
+        Self {
+            torrent,
+            status: download_status,
+            resume_data_saved,
+        }
+    }
+
     pub fn apply(self, other: &StatusAlert) -> Result<StatusAlert, ()> {
         if self.torrent != other.torrent {
             return Err(());
