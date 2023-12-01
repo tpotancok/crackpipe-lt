@@ -178,22 +178,20 @@ impl StatusAlert {
         }
     }
 
-    pub fn apply(self, other: &StatusAlert) -> Result<StatusAlert, ()> {
+    pub fn apply(&mut self, other: &StatusAlert) {
         if self.torrent != other.torrent {
-            return Err(());
+            return;
         }
-        let result = Self {
-            status: {
-                if self.status == DownloadStatus::Running {
-                    other.status
-                } else {
-                    self.status
-                }
-            },
-            torrent: self.torrent,
-            resume_data_saved: self.resume_data_saved || other.resume_data_saved,
+
+        self.status = {
+            if self.status == DownloadStatus::Running {
+                other.status
+            } else {
+                self.status
+            }
         };
-        Ok(result)
+
+        self.resume_data_saved = self.resume_data_saved || other.resume_data_saved;
     }
 }
 
