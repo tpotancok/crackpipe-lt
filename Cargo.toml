@@ -12,6 +12,7 @@ repository = "https://github.com/shawone/libtorrent-sys"
 
 [dependencies]
 cxx = "1.0"
+serde = { version = "1.0.193", features = ["serde_derive"] }
 
 [build-dependencies]
 cxx-build = "1.0.0"

@@ -22,6 +22,7 @@ use std::pin::Pin;
 
 #[cxx::bridge(namespace = "libtorrent")]
 pub mod ffi {
+    #[derive(Serialize, Deserialize)]
     pub enum DownloadStatus {
         Running,
         Finished,
