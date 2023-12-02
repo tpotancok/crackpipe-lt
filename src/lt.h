@@ -47,4 +47,5 @@ namespace libtorrent
     void force_recheck(const lt::torrent_handle &handle);
     std::unique_ptr<lt::torrent_status> get_torrent_status(const lt::torrent_handle &torrent);
     float status_get_progress(const lt::torrent_status &status);
+    rust::string status_get_name(const lt::torrent_status &status);
 }

@@ -72,6 +72,8 @@ pub mod ffi {
         pub fn get_torrent_status(handle: &TorrentHandle) -> UniquePtr<TorrentStatus>;
 
         pub fn status_get_progress(status: &TorrentStatus) -> f32;
+
+        pub fn status_get_name(status: &TorrentStatus) -> String;
     }
 }
 
@@ -95,6 +97,10 @@ impl TorrentStatus {
 
     pub fn get_progress(&self) -> f32 {
         ffi::status_get_progress(&self.status)
+    }
+
+    pub fn get_name(&self) -> String {
+        ffi::status_get_name(&self.status)
     }
 }
 

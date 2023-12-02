@@ -109,11 +109,16 @@ namespace libtorrent
 
 	std::unique_ptr<lt::torrent_status> get_torrent_status(const lt::torrent_handle &torrent)
 	{
-		return std::make_unique<lt::torrent_status>(std::move(torrent.status(status_flags_t(0))));
+		return std::make_unique<lt::torrent_status>(std::move(torrent.status(torrent_handle::query_name)));
 	}
 
 	float status_get_progress(const lt::torrent_status &status)
 	{
 		return status.progress;
+	}
+
+	rust::string status_get_name(const lt::torrent_status &status)
+	{
+		return status.name;
 	}
 } // namespace libtorrent
